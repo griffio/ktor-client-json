@@ -21,6 +21,7 @@ data class Planets(
     val next: String?,
     val results: List<Planet>
 )
+
 @Serializable
 data class Planet(
     val climate: String?,
@@ -32,16 +33,19 @@ data class Planet(
     val orbitalPeriod: Int?,
     val population: Long?
 )
+
 class UnknownToNullPlanetSerializer : JsonTransformingSerializer<Planet>(Planet.serializer()) {
     override fun transformDeserialize(element: JsonElement): JsonElement {
-        val newMap: Map<String, JsonElement> = element.jsonObject.toMutableMap().map {
-            if (it.value == JsonPrimitive("unknown")) {
-                it.key to JsonNull
-            } else it.key to it.value
-        }.toMap()
+        val unknown = JsonPrimitive("unknown")
+        val newMap = element.jsonObject.mapValues { entry ->
+            if (entry.value == unknown) {
+                JsonNull
+            } else entry.value
+        }
         return JsonObject(newMap)
     }
 }
+
 suspend fun main() {
     // Setup HttpClient - e.g use Java engine
     // io.ktor:ktor-client-java
