@@ -12,6 +12,10 @@ Demonstrates
     * Some planets have "unknown" in various fields
     * e.g "population": "200000" or "population": "unknown"
 
+```
+./gradlew run
+```
+
 ``` json
 
 {
